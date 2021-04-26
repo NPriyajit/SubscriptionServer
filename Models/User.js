@@ -1,26 +1,26 @@
-const mongoose=require('mongoose');
+const mongoose=require('mongoose'), Schema=mongoose.Schema;
+const Subscription=require('./Subscription');
 
 
- const userSchema = new mongoose.Schema({
-    name:String,
-    dob:String,
-    email:String,
-    password:String
-  });
+
+  const subscriptionSchema = new mongoose.Schema(
+    {
+        name:String,
+        status: String,
+        dateOfEnd:String,
+        dateOfSubscription:String,
+        daysLeft:String
+    });
+
+    const userSchema = new mongoose.Schema({
+        name:String,
+        dob:String,
+        email:String,
+        password:String,
+        subscriptions: [subscriptionSchema],
+      });
 
   //Models
 const User = new mongoose.model("User", userSchema);
-
-// const emptyUser = {
-//     name:'',
-//     dob:'',
-//     email:'',
-//     password:''
-//   };
-
-// User.insertMany(emptyUser,(err)=>{
-//     if(err) throw err;
-//     console.log('data stored successfully');
-// });
 
 module.exports=User
