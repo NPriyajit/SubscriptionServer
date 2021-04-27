@@ -43,6 +43,7 @@ router.post("/register", (req, res) => {
 });
 
 router.put("/update/:id", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
   if (!ObjectID.isValid(req.params.id)) {
     return res.status(400).send("No record found with the given id");
   }
@@ -50,6 +51,7 @@ router.put("/update/:id", (req, res) => {
   User.findByIdAndUpdate(
     req.params.id,
     { $set: req.body },
+    {new:true},
     (err, result) => {
       if (err) return res.status(500).send("Error while updating the recods");
       else return res.send(result);
@@ -58,6 +60,7 @@ router.put("/update/:id", (req, res) => {
 });
 
 router.delete("/delete/:id", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
   if (!ObjectID.isValid(req.params.id)) {
     return res.status(400).send("No record found with the given id");
   }
@@ -66,5 +69,32 @@ router.delete("/delete/:id", (req, res) => {
      return res.status(200).send("Deleted successfully")
   });
 });
+
+
+router.put("/subscribe/:id",(req,res)=>{
+  let subscription=req.body;
+  User.findById(req.params.id, (err, result) => {
+    const newUser={
+      name:result.name,
+      dob:result.dob,
+      email:result.email,
+      password:result.password,
+      subscriptions: [
+        ...result.subscriptions, subscription
+      ],
+    };
+   newUser.subscriptions.push(subscription);
+    User.findByIdAndUpdate(
+      req.params.id,
+      { $set: newUser },
+      {new:true},
+      (err, resulte) => {
+        if (err) return res.status(500).send("Error while updating the recods");
+        else return res.send(resulte);
+      }
+    );
+  });
+
+})
 
 module.exports = router;
