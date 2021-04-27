@@ -2,11 +2,13 @@ const router = require("express").Router();
 const User = require("../Models/User");
 const ObjectID = require("mongoose").Types.ObjectId;
 
+const _ = require('lodash');
+
 router.get("/getById/:id", (req, res) => {
   User.findById(req.params.id, (err, result) => {
     if (err || result == null) return res.status(404).send("no user found");
-
-    return res.status(200).send(result);
+   result.subscriptions=[...new Map(result.subscriptions.map(item => [item.name, item])).values()];
+    return res.status(200).send( result);
   });
 });
 
@@ -25,7 +27,7 @@ router.post("/login", (req, res) => {
     },
     (err, result) => {
       if (err || result == null) return res.status(404).send("no user found");
-
+      
       return res.status(200).send(result);
     }
   );

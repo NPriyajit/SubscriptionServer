@@ -7,7 +7,7 @@ const mongoose=require('mongoose');
             status: String,
             dateOfEnd:String,
             dateOfSubscription:String,
-            daysLeft:String
+            desc:String
         });
 
   //Models
